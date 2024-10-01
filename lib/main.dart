@@ -24,19 +24,52 @@ void main() {
 }
 
 class Counter with ChangeNotifier {
-  int value = 0;
+  int _count = 0;
 
-  int get count => value;
+  int get count => _count;
 
   void increment() {
-    value++;
+    _count++;
     notifyListeners();
   }
 
   void decrement() {
-    value--;
+    _count--;
     notifyListeners();
   }
+
+  String get ageMilestoneMessage {
+    if (_count >= 0 && _count <= 12) {
+      return 'You are in your Childhood!';
+    } else if (_count >= 13 && _count <= 19) {
+      return 'You are in your Teenage years!';
+    } else if (_count >= 20 && _count <= 30) {
+      return 'You are a Young Adult!';
+    } else if (_count >= 31 && _count <= 50) {
+      return 'You are an Adult!';
+    } else if (_count >= 51) {
+      return 'You are a Senior!';
+    } else {
+      return 'Age is just a number!';
+    }
+  }
+
+  Color get ageMilestoneColor {
+    if (_count >= 0 && _count <= 12) {
+      return Colors.lightBlueAccent;
+    } else if (_count >= 13 && _count <= 19) {
+      return Colors.lightGreen;
+    } else if (_count >= 20 && _count <= 30) {
+      return Colors.orange;
+    } else if (_count >= 31 && _count <= 50) {
+      return Colors.yellow;
+    } else if (_count >= 51) {
+      return Colors.grey;
+    } else {
+      return Colors.white;
+    }
+  }
+
 }
 
 const double windowWidth = 360;
@@ -89,7 +122,11 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Flutter Age App'),
       ),
-      body: Center(
+      body: 
+      AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        color: counterProvider.ageMilestoneColor,
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -100,12 +137,19 @@ class MyHomePage extends StatelessWidget {
             // rebuilds if the model is updated.
             Consumer<Counter>(
               builder: (context, counter, child) => Text(
-                '${counter.value}',
+                '${counter._count}',
                 style: Theme.of(context).textTheme.headlineMedium,
-              ),
+               ),
             ),
+            const SizedBox(height: 20),
+            Text(
+                counterProvider.ageMilestoneMessage,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
           ],
         ),
+      ),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
